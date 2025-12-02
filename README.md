@@ -1,32 +1,46 @@
-# AdventOfCode 2024
+# AdventOfCode 2025
+[2025 Advent of Code](https://adventofcode.com) Solutions in C#
 
-[2024 Advent of Code](https://adventofcode.com) Solutions in C#
+## Build & Run
 
-This repository contains my personal solutions for the Advent of Code challenges, implemented in C#. As an advanced C# software engineer, I've approached these puzzles with a focus on efficient and effective programming techniques. Each folder in the repository corresponds to a specific day of the challenge, containing the C# code that I've written to solve the daily puzzles. This is not just a collection of solutions, but a reflection of my problem-solving journey and coding skills in C#. Feel free to explore my approaches and share your thoughts or alternative solutions!
+```bash
+# Build entire solution
+dotnet build AdventOfCode_2025.sln
 
-# Day 15: Warehouse Woes
-![Day15_Part2](Day15/part2_solution.png)
-
-
-# Day 1: Historian Hysteria
- [Read the full details](Day01/readme.md) about the solution.
-
-```csharp
-Read(line =>
-{
-    var parts = line.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(int.Parse).ToArray();
-    left.Add(parts[0]);
-    right.Add(parts[1]);
-
-    frequency.TryGetValue(parts[1], out int value);
-    frequency[parts[1]] = ++value;
-});
-
-left.Order()
-    .Zip(right.Order(), (l, r) => Math.Abs(l - r))
-    .Sum()
-    .ToConsole(sum => $"Solution to Part 1: {sum}");
-
-left.Sum(x => x * (frequency.TryGetValue(x, out int count) ? count : 0))
-    .ToConsole(similarity => $"Solution to Part 2: {similarity}");
+# Run a specific day
+dotnet run --project Day01 -- Day01/problem.txt
 ```
+
+## Project Structure
+
+| Folder | Description |
+|--------|-------------|
+| Day00  | Shared utilities library |
+| Day01+ | Daily puzzle solutions |
+
+## Day00 Utilities
+
+| File | Description |
+|------|-------------|
+| ReadInputs.cs | Span-based input parsing from files or stdin |
+| ReadInputExtensions.cs | Convenience methods for reading integers, records |
+| Grid.cs | 2D grid with neighbor traversal, BFS, region detection |
+| Node.cs | Grid node with position, value, distance, visited state |
+| SimulationGrid.cs | Sparse grid for simulations with viewport rendering |
+| Graph.cs | Generic graph with pathfinding |
+| Line.cs | 2D line segment with path enumeration |
+| CircularRange.cs | Circular number range with zero-crossing tracking |
+| CircularEnumerable.cs | Infinitely repeating sequence |
+| EnumerableExtensions.cs | Collection helpers (SplitToInts, Second, Third, etc.) |
+| CombinatoricsEnumerableExtensions.cs | Permutations, combinations |
+| StringParsingExtensions.cs | ParseInt, ParseIntegers, ParseLongs |
+| ArrayExtensions.cs | Array utilities |
+| RenderExtensions.cs | Fluent .ToConsole() for output |
+| Cards.cs | Playing card utilities |
+| EnumerableTuples.cs | Tuple enumeration helpers |
+
+## Solutions
+
+| Day | Puzzle | Solution |
+|-----|--------|----------|
+| 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Day01](Day01/) |
