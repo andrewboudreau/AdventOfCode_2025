@@ -18,6 +18,14 @@ dotnet run --project Day01 -- Day01/problem.txt
 | Day00  | Shared utilities library |
 | Day01+ | Daily puzzle solutions |
 
+
+## Solutions
+
+| Day | Puzzle | Solution |
+|-----|--------|----------|
+| 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Day01](Day01/) |
+| 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Day02](Day02/) |
+
 ## Day00 Utilities
 
 | File | Description |
@@ -38,10 +46,3 @@ dotnet run --project Day01 -- Day01/problem.txt
 | RenderExtensions.cs | Fluent .ToConsole() for output |
 | Cards.cs | Playing card utilities |
 | EnumerableTuples.cs | Tuple enumeration helpers |
-
-## Solutions
-
-| Day | Puzzle | Solution |
-|-----|--------|----------|
-| 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Day01](Day01/) |
-| 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Day02](Day02/) |
