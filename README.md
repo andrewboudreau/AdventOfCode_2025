@@ -44,3 +44,4 @@ dotnet run --project Day01 -- Day01/problem.txt
 | Day | Puzzle | Solution |
 |-----|--------|----------|
 | 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Day01](Day01/) |
+| 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Day02](Day02/) |
