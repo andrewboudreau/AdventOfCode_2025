@@ -21,7 +21,6 @@ Read(rot =>
             }
         }
         while (--move > 0);
-        if (dial == 0) zeros[0]++;
     }
     else // rot[0] == 'R'
     {
@@ -35,8 +34,9 @@ Read(rot =>
             }
         }
         while (--move > 0);
-        if (dial == 0) zeros[0]++;
     }
+
+    if (dial == 0) zeros[0]++;
 });
 
 zeros[0].ToConsole($"The dial stopped at zero {zeros[0]} times.");
