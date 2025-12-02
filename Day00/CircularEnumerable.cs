@@ -2,13 +2,13 @@
 
 namespace Day00;
 
-public sealed class EndlessEnumerable<T> : IEnumerable<T>, IDisposable
+public sealed class CircularEnumerable<T> : IEnumerable<T>, IDisposable
 {
     private readonly IEnumerable<T> source;
 
     private readonly IEnumerator<T> enumerator;
 
-    public EndlessEnumerable(IEnumerable<T>? source)
+    public CircularEnumerable(IEnumerable<T>? source)
     {
         this.source = source?.ToArray() ?? throw new ArgumentNullException(nameof(source));
         this.enumerator = GetEnumerator();

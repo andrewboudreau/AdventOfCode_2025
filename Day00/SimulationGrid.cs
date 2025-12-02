@@ -379,7 +379,7 @@ public static class SimulationGridRenderExtensions
         }
     }
 
-    public static void Render<T>(this SimulationGrid<T> grid, int x = 25, int y = 2, Action<IEnumerable<Node<T>>>? draw = default, Action<int, int>? setPosition = default)
+    public static void Render<T>(this SimulationGrid<T> grid, int x = 25, int y = 2, Action<IEnumerable<Node<T>?>>? draw = default, Action<int, int>? setPosition = default)
     {
         draw ??= Console.WriteLine;
         setPosition ??= Console.SetCursorPosition;
