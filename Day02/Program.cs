@@ -1,6 +1,5 @@
 ﻿// https://adventofcode.com/2025/day/2
 
-
 var line = ReadLines().First()!;
 var ranges = line.Split(',').Select(r => r.Split('-').ToArray()).ToList();
 
@@ -23,7 +22,6 @@ foreach (var range in ranges)
         {
             invalidNumbers[1].Add(current);
         }
-        iterations++;
     } while (current++ < end);
 }
 
@@ -40,31 +38,36 @@ static bool IsPart1Sequence(string value)
     return left == right;
 }
 
-bool IsPart2Sequence_Optimized(string value)
+bool IsPart2Sequence(string value)
 {
     for (var size = 1; size <= value.Length / 2; size++)
     {
+        if (value.Length % size != 0) continue;
+
         var pattern = value.AsSpan(0, size);
         var isRepeated = true;
 
         for (var i = size; i <= value.Length - size; i += size)
         {
+            iterations++;
             var chunk = value.AsSpan(i, size);
             if (!chunk.SequenceEqual(pattern))
             {
                 isRepeated = false;
                 break;
             }
-
-            iterations++;
         }
-        if (isRepeated) return true;
+
+        if (isRepeated)
+        {
+            return true;
+        }
     }
 
     return false;
 }
 
-static bool IsPart2Sequence(string value)
+static bool IsPart2Sequence_Naive(string value)
 {
     for (var size = value.Length / 2; size > 0; size--)
     {
