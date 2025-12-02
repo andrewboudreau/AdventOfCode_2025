@@ -1,7 +1,7 @@
 ﻿// https://adventofcode.com/2025/day/1
 
 var dial = 50;
-var zeros = 0;
+int[] zeros = [0, 0];
 
 Read(rot =>
 {
@@ -13,7 +13,7 @@ Read(rot =>
             dial--;
             if (dial == 0)
             {
-                zeros++;
+                zeros[1]++;
             }
             else if (dial == -1)
             {
@@ -21,6 +21,7 @@ Read(rot =>
             }
         }
         while (--move > 0);
+        if (dial == 0) zeros[0]++;
     }
     else // rot[0] == 'R'
     {
@@ -29,12 +30,14 @@ Read(rot =>
             dial++;
             if (dial == 100)
             {
-                zeros++;
+                zeros[1]++;
                 dial = 0;
             }
         }
         while (--move > 0);
+        if (dial == 0) zeros[0]++;
     }
 });
 
-zeros.ToConsole($"The dial pointed at zero {zeros} times.");
+zeros[0].ToConsole($"The dial stopped at zero {zeros[0]} times.");
+zeros[1].ToConsole($"The dial crossed zero {zeros[1]} times.");
