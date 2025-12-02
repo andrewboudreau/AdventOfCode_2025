@@ -1,64 +1,82 @@
-﻿namespace Day00;
+namespace Day00;
 
+/// <summary>
+/// Core input reading methods. All methods are span-based for performance.
+/// Input source is determined by command-line args: file path if provided, otherwise stdin.
+/// </summary>
 public static class ReadInputs
 {
-    public static IEnumerable<int> AsIntegers(string source)
-        => source.Select(c => (int)char.GetNumericValue(c));
-
-    public static IEnumerable<IEnumerable<int>> ReadAsRowsOfIntegers()
-        => Read(AsIntegers).Select(x => x);
-
-    public static IEnumerable<T> Read<T>(Func<IEnumerable<int>, T> factory)
-        => Read()
-            .TakeWhile(x => !string.IsNullOrEmpty(x))
-            .Select(line => factory(
-                line!
-                    .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(int.Parse)));
-
-
-    public static IEnumerable<T> Read<T>(Func<string, T> factory) =>
-        Read()
-            .TakeWhile(x => !string.IsNullOrEmpty(x))
-            .Select(x => factory(x!));
-
-    public static void Read(Action<string> action)
-    {
-        foreach (var line in Read().TakeWhile(x => x != null))
-        {
-            action(line!);
-        }
-    }
-
-    public static IEnumerable<T> ReadRecords<T>(Func<string[], T> factory)
-    {
-        var records = new List<string>();
-        foreach (var row in Read())
-        {
-            if (string.IsNullOrEmpty(row))
-            {
-                yield return factory([.. records]);
-                records.Clear();
-            }
-            else
-            {
-                records.Add(row!);
-            }
-        }
-
-        if (records.Count > 0)
-        {
-            yield return factory([.. records]);
-        }
-    }
-
-    public static IEnumerable<int> ReadIntegers() =>
-        Read(x => int.Parse(x));
-
-    public static IEnumerable<string?> Read()
+    /// <summary>
+    /// Gets the input file path from command-line arguments, or empty string if reading from stdin.
+    /// </summary>
+    private static string GetInputFile()
     {
         var args = Environment.GetCommandLineArgs();
-        var inputFile = args.Length > 1 ? args[1] : string.Empty;
+        return args.Length > 1 ? args[1] : string.Empty;
+    }
+
+    /// <summary>
+    /// Core span-based read with callback. Processes each line as a <see cref="ReadOnlySpan{char}"/>.
+    /// </summary>
+    public static void Read(ReadOnlySpanAction<char> action)
+    {
+        var inputFile = GetInputFile();
+
+        if (!string.IsNullOrEmpty(inputFile))
+        {
+            foreach (var line in File.ReadLines(inputFile))
+            {                
+				action(line.AsSpan());
+            }
+        }
+        else
+        {
+            string? line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                action(line.AsSpan());
+            }
+        }
+    }
+
+    /// <summary>
+    /// Core span-based read with factory. Transforms each line using the provided factory function.
+    /// Stops at empty lines.
+    /// </summary>
+    public static IEnumerable<T> Read<T>(Func<ReadOnlySpan<char>, T> factory)
+    {
+        var inputFile = GetInputFile();
+
+        if (!string.IsNullOrEmpty(inputFile))
+        {
+            foreach (var line in File.ReadLines(inputFile))
+            {
+                if (string.IsNullOrEmpty(line))
+                    break;
+
+                yield return factory(line.AsSpan());
+            }
+        }
+        else
+        {
+            string? line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                if (string.IsNullOrEmpty(line))
+                    break;
+
+                yield return factory(line.AsSpan());
+            }
+        }
+    }
+
+    /// <summary>
+    /// Reads all lines as strings. Useful for compatibility and multi-pass scenarios.
+    /// </summary>
+    public static IEnumerable<string?> ReadLines()
+    {
+        var inputFile = GetInputFile();
+
         if (!string.IsNullOrEmpty(inputFile))
         {
             foreach (var line in File.ReadAllLines(inputFile))
@@ -72,7 +90,6 @@ public static class ReadInputs
                 yield return Console.ReadLine();
         }
     }
-
-    public static T ReadTo<T>(Func<IEnumerable<string?>, T> factory)
-        => factory(Read());
 }
+
+public delegate void ReadOnlySpanAction<T>(ReadOnlySpan<T> span);
