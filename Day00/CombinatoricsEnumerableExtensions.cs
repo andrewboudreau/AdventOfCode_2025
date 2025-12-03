@@ -11,14 +11,15 @@ public static partial class CombinatoricsEnumerableExtensions
             yield return new List<T>();
         else
         {
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i <= items.Count - k; i++)
             {
                 var head = items[i];
                 var tail = items.Skip(i + 1).ToList();
                 foreach (var tailCombo in Combinations(tail, k - 1))
                 {
-                    tailCombo.Insert(0, head);
-                    yield return tailCombo;
+                    var result = new List<T>(k) { head };
+                    result.AddRange(tailCombo);
+                    yield return result;
                 }
             }
         }
@@ -37,15 +38,14 @@ public static partial class CombinatoricsEnumerableExtensions
         {
             for (int i = 0; i < items.Count; i++)
             {
-                // item at i
                 var first = items[i];
                 var remaining = items.Where((x, idx) => idx != i).ToList();
 
-                // permute the remainder
                 foreach (var permOfRemainder in Permutations(remaining))
                 {
-                    permOfRemainder.Insert(0, first);
-                    yield return permOfRemainder;
+                    var result = new List<T>(items.Count) { first };
+                    result.AddRange(permOfRemainder);
+                    yield return result;
                 }
             }
         }
