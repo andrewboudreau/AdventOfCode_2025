@@ -134,13 +134,13 @@ public class Node<T> : IEqualityComparer<T>, IEquatable<T>
     public override string ToString() => $"{X},{Y} {Value}";
 
     public bool Equals(T? x, T? y)
-        => (x == null && y == null) || x!.Equals(y);
+        => (x == null && y == null) || (x != null && x.Equals(y));
 
     public int GetHashCode([DisallowNull] T obj)
-        => GetHashCode(obj);
+        => obj.GetHashCode();
 
     public bool Equals(T? other)
-        => Equals(this, other);
+        => Value != null && Value.Equals(other);
 
     public static implicit operator T(Node<T> node) => node.Value;
 }
