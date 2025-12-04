@@ -1,21 +1,57 @@
 ﻿// https://adventofcode.com/2025/day/3
 
+
 int part1 = 0;
+long part1a = 0;
 long part2 = 0;
 
 foreach (var bank in ReadAsRowsOfIntegers())
 {
     var maxValue = FindMaxTwoDigitValue(bank);
+    var maxValuePart1 = FindLargestNDigitNumber([.. bank], 2);
     part1 += maxValue;
-    Console.WriteLine($"Max 2-Digit value in bank [{string.Join(", ", bank)}] is {maxValue}");
+    part1a += maxValuePart1;
 
-    var maxValuePart2 = FindMaxTweleveDigitValue(bank);
+    //Console.WriteLine($"Max 2-Digit value in bank [{string.Join(", ", bank)}] is {maxValue}");
+    //Console.WriteLine($"Max General 2-Digit value in bank [{string.Join(", ", bank)}] is {maxValuePart1}");
+
+    var maxValuePart2 = FindLargestNDigitNumber([.. bank], 12);
     part2 += maxValuePart2;
     Console.WriteLine($"Max 12-digit value in bank [{string.Join(", ", bank)}] is {maxValuePart2}");
 }
 
 part1.ToConsole(sum => $"Total sum of max 2-digit values: {sum}");
+part1a.ToConsole(sum => $"General Total sum of max 2-digit values: {sum}");
+
 part2.ToConsole(sum => $"Total sum of max 12-digit values: {sum}");
+
+long FindLargestNDigitNumber(int[] ints, int n)
+{
+    long result = 0;
+    int startIndex = 0;
+
+    for (int digitsNeeded = n; digitsNeeded > 0; digitsNeeded--)
+    {
+        // Find the largest digit in the range where we can still pick enough remaining digits
+        int maxDigit = 0;
+        int maxIndex = startIndex;
+
+        // We can search from startIndex up to (ints.Length - digitsNeeded)
+        for (int i = startIndex; i <= ints.Length - digitsNeeded; i++)
+        {
+            if (ints[i] > maxDigit)
+            {
+                maxDigit = ints[i];
+                maxIndex = i;
+            }
+        }
+
+        result = (result * 10) + maxDigit;
+        startIndex = maxIndex + 1;
+    }
+
+    return result;
+}
 
 static int FindMaxTwoDigitValue(IEnumerable<int> values)
 {
@@ -44,39 +80,5 @@ static int FindMaxTwoDigitValue(IEnumerable<int> values)
     return max;
 }
 
-static long FindMaxTweleveDigitValue(IEnumerable<int> values)
-{
-    //start from the right of the value 12 places in, and load that up
-    var digits = values.ToArray();
-    var max = digits[^12..];
-
-    for (var i = digits.Length - 13; i >= 0; i--)
-    {
-        var candidate = digits[i..(i + 12)];
-        if (IsGreaterThan(candidate, max))
-        {
-            max = candidate;
-        }
-    }
-
-    return max.Aggregate(0L, (acc, digit) => acc * 10 + digit);
-}
-
-static bool IsGreaterThan(int[] candidate, int[] max)
-{
-    for (var i = 0; i < candidate.Length; i++)
-    {
-        if (candidate[i] > max[i])
-        {
-            return true;
-        }
-        else if (candidate[i] < max[i])
-        {
-            return false;
-        }
-    }
-
-    return false;
-}
 
 //part1: 17207
