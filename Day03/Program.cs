@@ -1,7 +1,5 @@
 ﻿// https://adventofcode.com/2025/day/3
 
-using Day00;
-
 int part1 = 0;
 long part2 = 0;
 
