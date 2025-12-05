@@ -19,32 +19,26 @@ accessible.ToConsole(result => $"There were {result} bundles with less than 4 ne
 
 // Part Two: Keep removing accessible rolls until none are left
 var totalRemoved = 0;
-bool removedAny;
 
-do
+grid.WhileTrue(g =>
 {
-    removedAny = false;
     var toRemove = new List<Node<char>>();
-
     foreach (var node in grid)
     {
-        if (node is { Value: '.' })
-            continue;
-
-        if (grid.Neighbors(node).Count(n => n.Value == '@') < 4)
+        if (node.Value == '@' && g.Neighbors(node).Count(n => n.Value == '@') < 4)
         {
             toRemove.Add(node);
         }
     }
+    
+    totalRemoved += toRemove.Count;
+    toRemove.ForEach(node => node.SetValue('.'));
 
-    foreach (var node in toRemove)
-    {
-        node.SetValue('.');
-        totalRemoved++;
-        removedAny = true;
-    }
+    return toRemove.Count > 0;
+});
 
-} while (removedAny);
+grid.Render(Console.WriteLine);
+grid.RenderToBitmap("output.bmp", c => c == '@' ? ((byte)255, (byte)255, (byte)255) : ((byte)0, (byte)0, (byte)0));
 
 totalRemoved.ToConsole(result => $"Total rolls removed: {result}");
 

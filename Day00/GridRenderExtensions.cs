@@ -105,4 +105,53 @@ public static class GridRenderExtensions
             }
         });
     }
+
+    public static void RenderToBitmap<T>(this Grid<T> grid, string filePath, Func<T, (byte R, byte G, byte B)> getColor)
+    {
+        int width = grid.Width;
+        int height = grid.Height;
+        int rowStride = (width * 3 + 3) & ~3; // BMP rows must be 4-byte aligned
+        int imageSize = rowStride * height;
+        int fileSize = 54 + imageSize; // 54 byte header + pixel data
+
+        using var stream = File.Create(filePath);
+        using var writer = new BinaryWriter(stream);
+
+        // BMP Header (14 bytes)
+        writer.Write((byte)'B');
+        writer.Write((byte)'M');
+        writer.Write(fileSize);
+        writer.Write((short)0); // Reserved
+        writer.Write((short)0); // Reserved
+        writer.Write(54);       // Pixel data offset
+
+        // DIB Header (40 bytes)
+        writer.Write(40);       // Header size
+        writer.Write(width);
+        writer.Write(height);
+        writer.Write((short)1); // Color planes
+        writer.Write((short)24); // Bits per pixel
+        writer.Write(0);        // No compression
+        writer.Write(imageSize);
+        writer.Write(2835);     // Horizontal resolution (72 DPI)
+        writer.Write(2835);     // Vertical resolution (72 DPI)
+        writer.Write(0);        // Colors in palette
+        writer.Write(0);        // Important colors
+
+        // Pixel data (bottom-up)
+        byte[] row = new byte[rowStride];
+        for (int y = height - 1; y >= 0; y--)
+        {
+            Array.Clear(row);
+            for (int x = 0; x < width; x++)
+            {
+                var node = grid[x, y];
+                var (r, g, b) = node is not null ? getColor(node.Value) : ((byte)0, (byte)0, (byte)0);
+                row[x * 3] = b;     // BMP uses BGR order
+                row[x * 3 + 1] = g;
+                row[x * 3 + 2] = r;
+            }
+            writer.Write(row);
+        }
+    }
 }

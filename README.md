@@ -25,6 +25,15 @@ dotnet run --project Day01 -- Day01/problem.txt
 |-----|--------|----------|
 | 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Day01](Day01/) |
 | 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Day02](Day02/) |
+| 3 | [Lobby](https://adventofcode.com/2025/day/3) | [Day03](Day03/) |
+| 4 | [Printing Department](https://adventofcode.com/2025/day/4) | [Day04](Day04/) |
+
+## Visualizations
+
+### Day 4 - Printing Department
+Final grid state after removing all accessible paper rolls (white = remaining rolls, black = empty):
+
+![Day 4 Output](Day04/output.bmp)
 
 ## Day00 Utilities
 
@@ -33,6 +42,7 @@ dotnet run --project Day01 -- Day01/problem.txt
 | ReadInputs.cs | Span-based input parsing from files or stdin |
 | ReadInputExtensions.cs | Convenience methods for reading integers, records |
 | Grid.cs | 2D grid with neighbor traversal, BFS, region detection |
+| GridRenderExtensions.cs | Grid rendering including bitmap export |
 | Node.cs | Grid node with position, value, distance, visited state |
 | SimulationGrid.cs | Sparse grid for simulations with viewport rendering |
 | Graph.cs | Generic graph with pathfinding |
