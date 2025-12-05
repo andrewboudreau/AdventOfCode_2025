@@ -106,12 +106,12 @@ public static class GridRenderExtensions
         });
     }
 
-    public static void RenderToBitmap<T>(this Grid<T> grid, string filePath, Func<T, (byte R, byte G, byte B)> getColor)
+    public static void RenderToBitmap<T>(this Grid<T> grid, string filePath, Func<T, (byte R, byte G, byte B)> getColor, int scale = 1)
     {
-        int width = grid.Width;
-        int height = grid.Height;
-        int rowStride = (width * 3 + 3) & ~3; // BMP rows must be 4-byte aligned
-        int imageSize = rowStride * height;
+        int scaledWidth = grid.Width * scale;
+        int scaledHeight = grid.Height * scale;
+        int rowStride = (scaledWidth * 3 + 3) & ~3; // BMP rows must be 4-byte aligned
+        int imageSize = rowStride * scaledHeight;
         int fileSize = 54 + imageSize; // 54 byte header + pixel data
 
         using var stream = File.Create(filePath);
@@ -127,8 +127,8 @@ public static class GridRenderExtensions
 
         // DIB Header (40 bytes)
         writer.Write(40);       // Header size
-        writer.Write(width);
-        writer.Write(height);
+        writer.Write(scaledWidth);
+        writer.Write(scaledHeight);
         writer.Write((short)1); // Color planes
         writer.Write((short)24); // Bits per pixel
         writer.Write(0);        // No compression
@@ -140,18 +140,29 @@ public static class GridRenderExtensions
 
         // Pixel data (bottom-up)
         byte[] row = new byte[rowStride];
-        for (int y = height - 1; y >= 0; y--)
+        for (int y = grid.Height - 1; y >= 0; y--)
         {
             Array.Clear(row);
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < grid.Width; x++)
             {
                 var node = grid[x, y];
                 var (r, g, b) = node is not null ? getColor(node.Value) : ((byte)0, (byte)0, (byte)0);
-                row[x * 3] = b;     // BMP uses BGR order
-                row[x * 3 + 1] = g;
-                row[x * 3 + 2] = r;
+                
+                // Write scaled pixels
+                for (int sx = 0; sx < scale; sx++)
+                {
+                    int pixelX = x * scale + sx;
+                    row[pixelX * 3] = b;     // BMP uses BGR order
+                    row[pixelX * 3 + 1] = g;
+                    row[pixelX * 3 + 2] = r;
+                }
             }
-            writer.Write(row);
+            
+            // Write the same row 'scale' times for vertical scaling
+            for (int sy = 0; sy < scale; sy++)
+            {
+                writer.Write(row);
+            }
         }
     }
 }

@@ -38,7 +38,14 @@ grid.WhileTrue(g =>
 });
 
 grid.Render(Console.WriteLine);
-grid.RenderToBitmap("output.bmp", c => c == '@' ? ((byte)255, (byte)255, (byte)255) : ((byte)0, (byte)0, (byte)0));
+
+var white = ((byte)255, (byte)255, (byte)255);
+var black = (((byte)0, (byte)0, (byte)0));
+
+grid.RenderToBitmap(
+    filePath: "output.bmp", 
+    getColor: node => node == '@' ? white : black, 
+    scale: 4);
 
 totalRemoved.ToConsole(result => $"Total rolls removed: {result}");
 
