@@ -7,19 +7,26 @@ ReadParts(
         .Select(parts => (Start: long.Parse(parts[0]), End: long.Parse(parts[1])))
         .ToList(),
     (inventoryIds, validRanges) =>
-        inventoryIds
-            .Select(long.Parse)
-            .Count(id => validRanges.Any((r) => id >= r.Start && id <= r.End)))
-.ToConsole(x => $"Part 1: {x}"); //782
-
-Read(
-    (ReadOnlySpan<char> line) =>
     {
-        var split = line.IndexOf('-');
-        var value = (long.Parse(line[(split+1)..]) - long.Parse(line[..split])) + 1;
-        Console.WriteLine($"The value is " + value);
-        return value;
+        var part1 = inventoryIds
+            .Select(long.Parse)
+            .Count(id => validRanges.Any(r => id >= r.Start && id <= r.End));
+
+        // Merge overlapping ranges
+        var merged = validRanges
+            .OrderBy(r => r.Start)
+            .Aggregate(new List<(long Start, long End)>(), (acc, r) =>
+            {
+                if (acc.Count == 0 || acc[^1].End < r.Start - 1)
+                    acc.Add(r);
+                else
+                    acc[^1] = (acc[^1].Start, Math.Max(acc[^1].End, r.End));
+                return acc;
+            });
+
+        var part2 = merged.Sum(r => r.End - r.Start + 1);
+
+        return (part1, part2);
     })
-.Sum()
-.ToConsole(x => $"Part 2: {x}");
+.ToConsole(solution => $"Part 1: {solution.part1}\nPart 2: {solution.part2}");
 
