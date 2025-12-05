@@ -119,6 +119,44 @@ public static class ReadInputExtensions
         => ReadInputs.Read(line => AsIntegers(line.ToString()));
 
     /// <summary>
+    /// Reads two sections of input separated by a blank line.
+    /// Part 1 lines are processed to create a context, then part 2 lines are processed with that context.
+    /// </summary>
+    /// <remarks>
+    /// Input:
+    /// <code>
+    /// 47|53
+    /// 97|13
+    ///
+    /// 75,47,61,53,29
+    /// 97,61,53,29,13
+    /// </code>
+    /// Usage:
+    /// <code>
+    /// var result = ReadParts(
+    ///     lines => lines.Select(ParseRule).ToHashSet(),
+    ///     (lines, rules) => lines.Count(line => IsValid(line, rules)));
+    /// </code>
+    /// </remarks>
+    public static TResult ReadParts<TContext, TResult>(
+        Func<IEnumerable<string>, TContext> arrange,
+        Func<IEnumerable<string>, TContext, TResult> execute)
+    {
+        using var enumerator = ReadInputs.ReadLines().GetEnumerator();
+
+        IEnumerable<string> YieldUntilBlank()
+        {
+            while (enumerator.MoveNext() && !string.IsNullOrEmpty(enumerator.Current))
+            {
+                yield return enumerator.Current;
+            }
+        }
+
+        var context = arrange(YieldUntilBlank());
+        return execute(YieldUntilBlank(), context);
+    }
+
+    /// <summary>
     /// Parses space-delimited integers from a span into a destination span.
     /// </summary>
     /// <remarks>

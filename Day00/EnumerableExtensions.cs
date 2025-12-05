@@ -25,6 +25,11 @@ public static partial class EnumerableExtensions
             x => x.Split(split, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries), 
             (a, b) => int.Parse(b));
 
+    public static IEnumerable<long> SplitToLongs(this IEnumerable<string> source, char split)
+        => source.SelectMany(
+            x => x.Split(split, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+            (a, b) => long.Parse(b));
+
     public static T Second<T>(this IEnumerable<T> source) => source.ElementAt(1);
     public static T Third<T>(this IEnumerable<T> source) => source.ElementAt(2);
 
