@@ -27,6 +27,7 @@ dotnet run --project Day01 -- Day01/problem.txt
 | 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Day02](Day02/) |
 | 3 | [Lobby](https://adventofcode.com/2025/day/3) | [Day03](Day03/) |
 | 4 | [Printing Department](https://adventofcode.com/2025/day/4) | [Day04](Day04/) |
+| 5 | [Cafeteria](https://adventofcode.com/2025/day/5) | [Day05](Day05/) |
 
 ## Visualizations
 
