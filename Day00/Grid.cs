@@ -212,6 +212,19 @@ public class Grid<T> : IEnumerable<Node<T>>
 
 public static class GridExtensions
 {
+    public static int Count<T>(this Grid<T> grid, Func<Grid<T>, Node<T>, bool> predicate)
+    {
+        int count = 0;
+        foreach (var node in grid)
+        {
+            if (predicate(grid, node))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static IEnumerable<Node<T>> UpFrom<T>(this Grid<T> grid, Node<T> node)
     {
         for (var i = node.Y - 1; i >= 0; i--)
