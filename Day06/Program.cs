@@ -4,6 +4,7 @@
 List<List<int>> columns = [];
 List<char> operators = [];
 
+// Parse
 ReadSplit(rows =>
 {
     foreach (var row in rows)
@@ -30,31 +31,19 @@ ReadSplit(rows =>
     }
 });
 
+
+// Process
 long total = 0;
 foreach (var (ordinal, op) in operators.Index())
 {
     if (op == '+')
     {
-        long tmp = 0;
-        foreach (var operand in columns[ordinal])
-        {
-            tmp += operand;
-        }
-        total += tmp;
-
+        total += columns[ordinal].Sum();
     }
     else
     {
-        long tmp = 1;
-        foreach (var operand in columns[ordinal])
-        {
-            tmp *= operand;
-        }
-        total += tmp;
+        total += columns[ordinal].Product();
     }
-
 }
 
 total.ToConsole(t => $"The total of the pivot is {t}");
-// 26310042713
-// 26310042713 is too low
