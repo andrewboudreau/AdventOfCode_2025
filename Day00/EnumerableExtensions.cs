@@ -35,4 +35,10 @@ public static partial class EnumerableExtensions
 
     public static IEnumerable<T> WithoutElementAt<T>(this IEnumerable<T> source, int index)
         => source.Where((_, i) => i != index);
+
+    public static int Product(this IEnumerable<int> source)
+        => source.Aggregate(1, (acc, x) => acc * x);
+
+    public static long Product(this IEnumerable<long> source)
+        => source.Aggregate(1L, (acc, x) => acc * x);
 }

@@ -188,4 +188,88 @@ public static class ReadInputExtensions
             destination[index] = int.Parse(line[start..]);
         }
     }
+
+    private const StringSplitOptions DefaultSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
+
+    private const char DefaultSeparator = ' ';
+
+    /// <summary>
+    /// Reads all lines, splits each by the specified separator, and processes via a single action.
+    /// Minimizes allocations by yielding split segments lazily.
+    /// Defaults to space separator with RemoveEmptyEntries | TrimEntries.
+    /// </summary>
+    /// <remarks>
+    /// Input:
+    /// <code>
+    /// 123 328  51 64
+    ///  45 64  387 23
+    /// *   +   *   +
+    /// </code>
+    /// Usage:
+    /// <code>
+    /// ReadSplit(rows =>
+    /// {
+    ///     foreach (var row in rows)
+    ///     {
+    ///         foreach (var item in row)
+    ///             Console.Write($"[{item}] ");
+    ///         Console.WriteLine();
+    ///     }
+    /// });
+    /// </code>
+    /// </remarks>
+    public static void ReadSplit(
+        Action<IEnumerable<IEnumerable<string>>> action,
+        char separator = DefaultSeparator,
+        StringSplitOptions options = DefaultSplitOptions)
+    {
+        action(ReadSplitLines(separator, options));
+    }
+
+    /// <summary>
+    /// Reads all lines, splits each by the specified separator, and transforms via factory.
+    /// Defaults to space separator with RemoveEmptyEntries | TrimEntries.
+    /// </summary>
+    public static T ReadSplit<T>(
+        Func<IEnumerable<IEnumerable<string>>, T> factory,
+        char separator = DefaultSeparator,
+        StringSplitOptions options = DefaultSplitOptions)
+    {
+        return factory(ReadSplitLines(separator, options));
+    }
+
+    private static IEnumerable<IEnumerable<string>> ReadSplitLines(char separator, StringSplitOptions options)
+    {
+        foreach (var line in ReadInputs.ReadLines())
+        {
+            if (line == null)
+                yield break;
+
+            yield return SplitLine(line, separator, options);
+        }
+    }
+
+    private static IEnumerable<string> SplitLine(string line, char separator, StringSplitOptions options)
+    {
+        int start = 0;
+        bool removeEmpty = (options & StringSplitOptions.RemoveEmptyEntries) != 0;
+        bool trim = (options & StringSplitOptions.TrimEntries) != 0;
+
+        for (int i = 0; i <= line.Length; i++)
+        {
+            if (i == line.Length || line[i] == separator)
+            {
+                var segment = line.AsSpan(start, i - start);
+
+                if (trim)
+                    segment = segment.Trim();
+
+                if (!removeEmpty || segment.Length > 0)
+                    yield return segment.ToString();
+
+                start = i + 1;
+            }
+        }
+    }
 }
