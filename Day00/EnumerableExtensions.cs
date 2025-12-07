@@ -41,4 +41,22 @@ public static partial class EnumerableExtensions
 
     public static long Product(this IEnumerable<long> source)
         => source.Aggregate(1L, (acc, x) => acc * x);
+
+    public static int SumOf<T>(this IEnumerable<T> source, Func<T, int> selector)
+        => source.Sum(selector);
+
+    public static long SumOf<T>(this IEnumerable<T> source, Func<T, long> selector)
+        => source.Sum(selector);
+
+    public static long ProductOf<T>(this IEnumerable<T> source, Func<T, int> selector)
+        => source.Aggregate(1L, (acc, x) => acc * selector(x));
+
+    public static long ProductOf<T>(this IEnumerable<T> source, Func<T, long> selector)
+        => source.Aggregate(1L, (acc, x) => acc * selector(x));
+
+    public static long MaxOf<T>(this IEnumerable<T> source, Func<T, int> selector)
+        => source.Select(selector).Max();
+
+    public static long MaxOf<T>(this IEnumerable<T> source, Func<T, long> selector)
+        => source.Select(selector).Max();
 }
