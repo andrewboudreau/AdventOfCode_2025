@@ -208,6 +208,126 @@ public class Grid<T> : IEnumerable<Node<T>>
     public Node<T>? UpLeft(Node<T> node) => this[node.X - 1, node.Y - 1];
     public Node<T>? DownRight(Node<T> node) => this[node.X + 1, node.Y + 1];
     public Node<T>? DownLeft(Node<T> node) => this[node.X - 1, node.Y + 1];
+
+    /// <summary>
+    /// Returns all nodes in a column (top to bottom).
+    /// </summary>
+    public IEnumerable<Node<T>> Column(int x)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            if (this[x, y] is Node<T> node)
+                yield return node;
+        }
+    }
+
+    /// <summary>
+    /// Returns all nodes in a row (left to right).
+    /// </summary>
+    public IEnumerable<Node<T>> Row(int y)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            if (this[x, y] is Node<T> node)
+                yield return node;
+        }
+    }
+
+    /// <summary>
+    /// Returns a vertical slice (column segment) using Range syntax.
+    /// Usage: grid.Slice(x: 5, y: 0..3) returns nodes at (5,0), (5,1), (5,2)
+    /// </summary>
+    public IEnumerable<Node<T>> Slice(int x, Range y)
+    {
+        var (startY, lengthY) = y.GetOffsetAndLength(height);
+        for (int row = startY; row < startY + lengthY; row++)
+        {
+            if (this[x, row] is Node<T> node)
+                yield return node;
+        }
+    }
+
+    /// <summary>
+    /// Returns a horizontal slice (row segment) using Range syntax.
+    /// Usage: grid.Slice(x: 2..5, y: 3) returns nodes at (2,3), (3,3), (4,3)
+    /// </summary>
+    public IEnumerable<Node<T>> Slice(Range x, int y)
+    {
+        var (startX, lengthX) = x.GetOffsetAndLength(width);
+        for (int col = startX; col < startX + lengthX; col++)
+        {
+            if (this[col, y] is Node<T> node)
+                yield return node;
+        }
+    }
+
+    /// <summary>
+    /// Returns a 2D rectangular region using Range syntax.
+    /// Usage: grid.Region(x: 2..5, y: 1..4) returns a 3x3 region
+    /// Iterates row by row (top to bottom, left to right within each row).
+    /// </summary>
+    public IEnumerable<Node<T>> Region(Range x, Range y)
+    {
+        var (startX, lengthX) = x.GetOffsetAndLength(width);
+        var (startY, lengthY) = y.GetOffsetAndLength(height);
+
+        for (int row = startY; row < startY + lengthY; row++)
+        {
+            for (int col = startX; col < startX + lengthX; col++)
+            {
+                if (this[col, row] is Node<T> node)
+                    yield return node;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns a 2D rectangular region as rows (for row-by-row processing).
+    /// Usage: grid.RegionRows(x: 2..5, y: 1..4) returns IEnumerable of rows
+    /// </summary>
+    public IEnumerable<IEnumerable<Node<T>>> RegionRows(Range x, Range y)
+    {
+        var (startX, lengthX) = x.GetOffsetAndLength(width);
+        var (startY, lengthY) = y.GetOffsetAndLength(height);
+
+        for (int row = startY; row < startY + lengthY; row++)
+        {
+            yield return GetRegionRow(startX, lengthX, row);
+        }
+    }
+
+    private IEnumerable<Node<T>> GetRegionRow(int startX, int lengthX, int row)
+    {
+        for (int col = startX; col < startX + lengthX; col++)
+        {
+            if (this[col, row] is Node<T> node)
+                yield return node;
+        }
+    }
+
+    /// <summary>
+    /// Returns a 2D rectangular region as columns (for column-by-column processing).
+    /// Usage: grid.RegionColumns(x: 2..5, y: 1..4) returns IEnumerable of columns
+    /// </summary>
+    public IEnumerable<IEnumerable<Node<T>>> RegionColumns(Range x, Range y)
+    {
+        var (startX, lengthX) = x.GetOffsetAndLength(width);
+        var (startY, lengthY) = y.GetOffsetAndLength(height);
+
+        for (int col = startX; col < startX + lengthX; col++)
+        {
+            yield return GetRegionColumn(col, startY, lengthY);
+        }
+    }
+
+    private IEnumerable<Node<T>> GetRegionColumn(int col, int startY, int lengthY)
+    {
+        for (int row = startY; row < startY + lengthY; row++)
+        {
+            if (this[col, row] is Node<T> node)
+                yield return node;
+        }
+    }
 }
 
 public static class GridExtensions

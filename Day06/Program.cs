@@ -1,37 +1,37 @@
 // https://adventofcode.com/2025/day/6
 // --- Day 6: Trash Compactor ---
 
+// Read input once for both parts
+var lines = ReadLines().TakeWhile(x => !string.IsNullOrEmpty(x)).Cast<string>().ToList();
+var grid = new Grid<char>(lines, line => line.PadRight(lines.Max(l => l.Length)));
+
 // Part 1: Numbers are written in rows, with operators below each column
 List<List<int>> columns = [];
 List<char> operators = [];
 
-// Parse
-ReadSplit(rows =>
+// Parse by splitting on whitespace
+foreach (var row in lines)
 {
-    foreach (var row in rows)
+    foreach (var (ordinal, item) in row.Split(' ', StringSplitOptions.RemoveEmptyEntries).Index())
     {
-        foreach (var (ordinal, item) in row.Index())
+        if (char.IsNumber(item[0]))
         {
-            if (char.IsNumber(item[0]))
+            // make sure our pivot table is big enough
+            if (columns.Count <= ordinal)
             {
-                // make sure our pivot table is big enough
-                if (columns.Count <= ordinal)
-                {
-                    columns.Add([]);
-                }
+                columns.Add([]);
+            }
 
-                // add to pivot table
-                columns[ordinal].Add(int.Parse(item));
-            }
-            else
-            {
-                // add to list of operators
-                operators.Add(item[0]);
-            }
+            // add to pivot table
+            columns[ordinal].Add(int.Parse(item));
+        }
+        else
+        {
+            // add to list of operators
+            operators.Add(item[0]);
         }
     }
-});
-
+}
 
 // Process
 long total = 0;
@@ -47,7 +47,7 @@ foreach (var (ordinal, op) in operators.Index())
     }
 }
 
-total.ToConsole(t => $"The total of the pivot is {t}");
+total.ToConsole(t => $"Part 1: {t}");
 
 // Part 2: Numbers are written in columns (top=most significant, bottom=least significant)
 // Read right-to-left, one column at a time, grouping by problems separated by space columns.
@@ -57,9 +57,6 @@ total.ToConsole(t => $"The total of the pivot is {t}");
 //   Col 1: '4','3','1' -> 431
 //   Col 2: ' ',' ','4' -> 4    (leading spaces ignored)
 // Problem: 4 + 431 + 623 = 1058
-
-var lines = ReadLines().TakeWhile(x => !string.IsNullOrEmpty(x)).Cast<string>().ToList();
-var grid = new Grid<char>(lines, line => line.PadRight(lines.Max(l => l.Length)));
 
 // Part 2: Parse column by column, right to left
 // Each column of digits (top to bottom) forms one number
@@ -75,20 +72,23 @@ for (int col = grid.Width - 1; col >= 0; col--)
     // Get operator (bottom row of this column)
     char op = grid[col, grid.Height - 1]!.Value;
 
-    // Get digits from this column (rows 0 to height-2, top to bottom)
-    var columnDigits = Enumerable.Range(0, grid.Height - 1)
-        .Select(row => grid[col, row]!.Value)
+    // Get digits from this column using Slice (excludes operator row)
+    var columnChars = grid.Slice(x: col, y: ..^1)
+        .Select(n => n.Value)
         .ToList();
 
     // Check if this column has any digits
-    bool hasDigits = columnDigits.Any(char.IsDigit);
+    bool hasDigits = columnChars.Any(char.IsDigit);
 
     if (hasDigits)
     {
-        // Build number from column (top=most significant)
-        // Skip leading spaces, then parse digits
-        var digits = new string(columnDigits.SkipWhile(c => !char.IsDigit(c)).ToArray());
-        long number = long.Parse(digits);
+        // Build number using Aggregate: multiply by 10, add digit
+        // Skip leading non-digits AND take only digits
+        long number = columnChars
+            .SkipWhile(c => !char.IsDigit(c))
+            .TakeWhile(char.IsDigit)
+            .Aggregate(0L, (acc, c) => acc * 10 + (c - '0'));
+
         currentNumbers.Add(number);
 
         // Track operator (should be same for all columns in a problem, or space)
