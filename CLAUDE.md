@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Advent of Code 2025 solutions repository implemented in C#. Advent of Code is an annual programming competition with daily puzzles released December 1-25.
+This is an Advent of Code 2025 solutions repository implemented in C# targeting .NET 10.
 
 ## Build and Run Commands
 
@@ -31,11 +31,19 @@ dotnet run --project Day01/Day01.csproj
 A class library containing reusable utilities for solving puzzles. Each daily solution project references Day00.
 
 Key utilities:
-- **ReadInputs.cs**: Input parsing with multiple overloads for reading from files or stdin. Supports string, span-based, and integer parsing. Input file is passed as a command-line argument.
-- **Grid.cs / Node.cs**: 2D grid data structure with neighbor traversal, BFS distance calculations, region detection, and sequence matching. Nodes track position, value, distance, and visited state.
+- **ReadInputs.cs**: Core span-based input parsing from files or stdin. Input file is passed as a command-line argument.
+- **ReadInputExtensions.cs**: Higher-level input methods:
+  - `Read<T>(Func<IEnumerable<int>, T>)` - Parse space-delimited integers per line
+  - `ReadRecords<T>(Func<string[], T>)` - Parse multi-line records separated by blank lines
+  - `ReadParts<TContext, TResult>(arrange, execute)` - Parse two-section inputs (common AoC pattern)
+  - `ReadIntegers()` - One integer per line
+  - `ReadAsRowsOfIntegers()` - Digit grids
+  - `ReadSplit()` - Split lines by delimiter
+- **Grid.cs / Node.cs**: 2D grid with neighbor traversal (`Up`, `Down`, `Left`, `Right`, diagonals), BFS distance calculations, region detection via `GetRegions()`, and `SequenceEqual` for pattern matching.
 - **RenderExtensions.cs**: Fluent `.ToConsole()` extension for outputting results.
-- **StringParsingExtensions.cs**: Helpers like `ParseInt`, `ParseIntegers`, `ParseLongs` for extracting numbers from strings.
-- **EnumerableExtensions.cs**: Collection helpers including bit manipulation, `SplitToInts`, `Second()`, `Third()`, `WithoutElementAt()`.
+- **StringParsingExtensions.cs**: `ParseInt`, `ParseIntegers`, `ParseLongs`, `ParseParts` for extracting numbers/parts from strings.
+- **EnumerableExtensions.cs**: `SplitToInts`, `Second()`, `Third()`, `WithoutElementAt()`, `Product()`, `SumOf()`, `ProductOf()`, `MaxOf()`.
+- **CombinatoricsEnumerableExtensions.cs**: `Combinations(k)` and `Permutations()` generators.
 
 ### Day## - Daily Solution Projects
 Each day has its own console application project with:
@@ -49,10 +57,21 @@ Solutions use the static `Read()` methods from Day00. Input source is determined
 - If a file path argument is provided, reads from that file
 - Otherwise reads from stdin (type input, then blank line to end)
 
+Common patterns:
+```csharp
+// Two-section input (rules + data)
+ReadParts(
+    rules => rules.Select(ParseRule).ToList(),
+    (data, rules) => Solve(data, rules))
+
+// Multi-line records
+ReadRecords(lines => new Record(lines))
+```
+
 ### Output Pattern
 Solutions typically use `.ToConsole()` for formatted output:
 ```csharp
-result.ToConsole(x => $"Solution to Part 1: {x}");
+result.ToConsole(x => $"Part 1: {x.part1}\nPart 2: {x.part2}");
 ```
 
 ## Creating a New Day
