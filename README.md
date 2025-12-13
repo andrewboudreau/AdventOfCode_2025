@@ -28,6 +28,9 @@ dotnet run --project Day01 -- Day01/problem.txt
 | 3 | [Lobby](https://adventofcode.com/2025/day/3) | [Day03](Day03/) |
 | 4 | [Printing Department](https://adventofcode.com/2025/day/4) | [Day04](Day04/) |
 | 5 | [Cafeteria](https://adventofcode.com/2025/day/5) | [Day05](Day05/) |
+| 6 | [Trash Compactor](https://adventofcode.com/2025/day/6) | [Day06](Day06/) |
+| 7 | [Laboratories](https://adventofcode.com/2025/day/7) | [Day07](Day07/) |
+| 8 | [Playground](https://adventofcode.com/2025/day/8) | [Day08](Day08/) |
 
 ## Visualizations
 
