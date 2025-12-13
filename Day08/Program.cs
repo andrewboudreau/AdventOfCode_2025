@@ -34,6 +34,10 @@ for (int i = 0; i < boxes.Length; i++)
 // Greedy approach: always try to connect nearest unconnected components first
 pairs.Sort((a, b) => a.dist.CompareTo(b.dist));
 
+// Debug: show first 3 pairs
+Console.WriteLine($"First 3 pairs: {string.Join(", ", pairs.Take(3).Select(p => $"({p.i},{p.j})={Math.Sqrt(p.dist):F2}"))}");
+Console.WriteLine($"Total boxes: {boxes.Length}, Total pairs: {pairs.Count}");
+
 // PHASE 3: Union-Find (Disjoint Set Union) data structure
 // Maintains a forest of trees where each tree represents a connected component.
 // Two key optimizations make this nearly O(1) per operation:
