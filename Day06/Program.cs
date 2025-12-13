@@ -2,7 +2,7 @@
 // --- Day 6: Trash Compactor ---
 
 // Read input once for both parts
-var lines = ReadLines().TakeWhile(x => !string.IsNullOrEmpty(x)).Cast<string>().ToList();
+var lines = ReadLines().ToList();
 var grid = new Grid<char>(lines, line => line.PadRight(lines.Max(l => l.Length)));
 
 // Part 1: Numbers are written in rows, with operators below each column

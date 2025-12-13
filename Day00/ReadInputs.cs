@@ -71,9 +71,9 @@ public static class ReadInputs
     }
 
     /// <summary>
-    /// Reads all lines as strings. Useful for compatibility and multi-pass scenarios.
+    /// Reads all lines as strings, including empty lines. Useful for compatibility and multi-pass scenarios.
     /// </summary>
-    public static IEnumerable<string?> ReadLines()
+    public static IEnumerable<string?> ReadAllLines()
     {
         var inputFile = GetInputFile();
 
@@ -86,8 +86,37 @@ public static class ReadInputs
         }
         else
         {
-            while (true)
-                yield return Console.ReadLine();
+            string? line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                yield return line;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Reads all non-empty lines as strings. Skips null or whitespace-only lines.
+    /// </summary>
+    public static IEnumerable<string> ReadLines()
+    {
+        var inputFile = GetInputFile();
+
+        if (!string.IsNullOrEmpty(inputFile))
+        {
+            foreach (var line in File.ReadAllLines(inputFile))
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                    yield return line;
+            }
+        }
+        else
+        {
+            string? line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                    yield return line;
+            }
         }
     }
 }

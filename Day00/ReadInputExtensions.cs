@@ -23,7 +23,6 @@ public static class ReadInputExtensions
     /// </remarks>
     public static IEnumerable<T> Read<T>(Func<IEnumerable<int>, T> factory)
         => ReadInputs.ReadLines()
-            .TakeWhile(x => !string.IsNullOrEmpty(x))
             .Select(line => factory(
                 line!
                     .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
@@ -50,7 +49,7 @@ public static class ReadInputExtensions
     public static IEnumerable<T> ReadRecords<T>(Func<string[], T> factory)
     {
         var records = new List<string>();
-        foreach (var row in ReadInputs.ReadLines())
+        foreach (var row in ReadInputs.ReadAllLines())
         {
             if (string.IsNullOrEmpty(row))
             {
@@ -142,7 +141,7 @@ public static class ReadInputExtensions
         Func<IEnumerable<string>, TContext> arrange,
         Func<IEnumerable<string>, TContext, TResult> execute)
     {
-        using var enumerator = ReadInputs.ReadLines().GetEnumerator();
+        using var enumerator = ReadInputs.ReadAllLines().GetEnumerator();
 
         IEnumerable<string> YieldUntilBlank()
         {
@@ -241,7 +240,7 @@ public static class ReadInputExtensions
 
     private static IEnumerable<IEnumerable<string>> ReadSplitLines(char separator, StringSplitOptions options)
     {
-        foreach (var line in ReadInputs.ReadLines())
+        foreach (var line in ReadInputs.ReadAllLines())
         {
             if (line == null)
                 yield break;

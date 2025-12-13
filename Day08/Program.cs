@@ -1,3 +1,6 @@
+// https://adventofcode.com/2025/day/8
+// --- Day 8: Playground ---
+
 var boxes = ReadLines()
     .Select(line => line.Split(',').Select(int.Parse).ToArray())
     .Select(p => (X: p[0], Y: p[1], Z: p[2]))

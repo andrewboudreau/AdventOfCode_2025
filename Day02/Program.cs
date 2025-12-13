@@ -1,6 +1,6 @@
 ﻿// https://adventofcode.com/2025/day/2
 
-var line = ReadLines().First()!;
+var line = ReadLines().First();
 var ranges = line.Split(',').Select(r => r.Split('-').ToArray()).ToList();
 
 List<long>[] invalidNumbers = [[], []];

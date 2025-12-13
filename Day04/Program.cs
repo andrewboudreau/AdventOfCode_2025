@@ -1,6 +1,6 @@
 ﻿// https://adventofcode.com/2025/day/4
 
-var grid = new Grid<char>(ReadLines()!, line => line);
+var grid = new Grid<char>(ReadLines(), line => line);
 
 static bool IsAccessible(Grid<char> grid, Node<char> node) =>
     node.Value == '@' && grid.Neighbors(node).Count(n => n.Value == '@') < 4;

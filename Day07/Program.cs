@@ -6,7 +6,7 @@
 // - Empty space '.' allows beam to pass
 // - Splitter '^' stops beam and emits two new beams (left and right)
 // - Count total number of times a splitter is hit
-var grid = new Grid<char>(ReadLines()!, line => line);
+var grid = new Grid<char>(ReadLines(), line => line);
 
 // Find start position 'S'
 var start = grid.First(n => n.Value == 'S');
