@@ -22,11 +22,11 @@ for (int i = 0; i < boxes.Length; i++)
 {
     for (int j = i + 1; j < boxes.Length; j++)
     {
-        var dx = boxes[i].X - boxes[j].X;
-        var dy = boxes[i].Y - boxes[j].Y;
-        var dz = boxes[i].Z - boxes[j].Z;
-        var dist = Math.Sqrt(dx * dx + dy * dy + dz * dz);
-        pairs.Add((i, j, dist));
+        var dx = (double)boxes[i].X - boxes[j].X;
+        var dy = (double)boxes[i].Y - boxes[j].Y;
+        var dz = (double)boxes[i].Z - boxes[j].Z;
+        var distSquared = dx * dx + dy * dy + dz * dz;  // Use squared distance; sqrt is unnecessary for comparisons
+        pairs.Add((i, j, distSquared));
     }
 }
 
@@ -99,10 +99,6 @@ var circuitSizes = boxes.Select((_, i) => Find(i))  // Map each box to its circu
 
 // ANSWER: Product of three largest circuit sizes
 // Edge case handling: If fewer than 3 circuits exist, Take() returns what's available
-Console.WriteLine($"DEBUG: Circuit sizes (top 10): {string.Join(", ", circuitSizes.Take(10))}");
-Console.WriteLine($"DEBUG: Total circuits: {circuitSizes.Count}");
-var result = circuitSizes.Aggregate(1L, (acc, x) => acc * x);
+var result = circuitSizes.Take(3).Aggregate(1L, (acc, x) => acc * x);
 
 result.ToConsole(x => $"Part 1: {x}");
- 
-//589 too low
