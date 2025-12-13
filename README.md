@@ -34,6 +34,11 @@ dotnet run --project Day01 -- Day01/problem.txt
 
 ## Visualizations
 
+### Day 7 - Laboratories (Tachyon Beam Splitter)
+Beams propagate downward and split at each `^` splitter, branching left and right:
+
+![Day 7 Visualization](Day07/Day07.gif)
+
 ### Day 4 - Printing Department
 Final grid state after removing all accessible paper rolls (white = remaining rolls, black = empty):
 
