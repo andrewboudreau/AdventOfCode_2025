@@ -31,6 +31,7 @@ dotnet run --project Day01 -- Day01/problem.txt
 | 6 | [Trash Compactor](https://adventofcode.com/2025/day/6) | [Day06](Day06/) |
 | 7 | [Laboratories](https://adventofcode.com/2025/day/7) | [Day07](Day07/) |
 | 8 | [Playground](https://adventofcode.com/2025/day/8) | [Day08](Day08/) |
+| 9 | [Movie Theater](https://adventofcode.com/2025/day/9) | [Day09](Day09/) |
 
 ## Visualizations
 
