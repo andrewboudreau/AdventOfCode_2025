@@ -32,8 +32,16 @@ dotnet run --project Day01 -- Day01/problem.txt
 | 7 | [Laboratories](https://adventofcode.com/2025/day/7) | [Day07](Day07/) |
 | 8 | [Playground](https://adventofcode.com/2025/day/8) | [Day08](Day08/) |
 | 9 | [Movie Theater](https://adventofcode.com/2025/day/9) | [Day09](Day09/) |
+| 10 | [Assembly Line](https://adventofcode.com/2025/day/10) | [Day10](Day10/) |
+| 11 | [Reactor Graph](https://adventofcode.com/2025/day/11) | [Day11](Day11/) |
+| 12 | [Christmas Tree Farm](https://adventofcode.com/2025/day/12) | [Day12](Day12/) |
 
 ## Visualizations
+
+### Day 11 - Reactor Graph
+Paths from `you`/`svr` to `out` through required waypoints are highlighted; node colors follow the legend from `Day11/visualize.html`.
+
+![Day 11 Visualization](Day11/Day11.png)
 
 ### Day 8 - Playground (Christmas Light Circuits)
 Kruskal's algorithm connects 1000 junction boxes by shortest distance, forming circuits colored by size (red=largest, green=2nd, blue=3rd):
