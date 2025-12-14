@@ -1,5 +1,4 @@
 # AdventOfCode 2025
-[2025 Advent of Code](https://adventofcode.com) Solutions in C#
 
 **[View Interactive Visualizations](https://andrewboudreau.github.io/AdventOfCode_2025/)**
 
@@ -86,3 +85,6 @@ Final grid state after removing all accessible paper rolls (white = remaining ro
 | RenderExtensions.cs | Fluent .ToConsole() for output |
 | Cards.cs | Playing card utilities |
 | EnumerableTuples.cs | Tuple enumeration helpers |
+
+
+[2025 Advent of Code](https://adventofcode.com) Solutions in C#
