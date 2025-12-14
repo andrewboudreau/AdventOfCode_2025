@@ -38,6 +38,11 @@ dotnet run --project Day01 -- Day01/problem.txt
 
 ## Visualizations
 
+### Day 12 - Christmas Tree Farm (Shape Packing)
+Interactive polyomino packing visualizer - click regions to solve and see color-coded shape placements:
+
+![Day 12 Visualization](Day12/Day12.png)
+
 ### Day 11 - Reactor Graph
 Paths from `you`/`svr` to `out` through required waypoints are highlighted; node colors follow the legend from `Day11/visualize.html`.
 

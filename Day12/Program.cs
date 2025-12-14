@@ -14,11 +14,11 @@ foreach (var line in ReadAllLines())
         if (currentCells.Count > 0)
         {
             shapes.Add(currentCells);
-            currentCells = new HashSet<(int r, int c)>();
+            currentCells = [];
             row = 0;
         }
     }
-    else if (line.Contains("x") && line.Contains(":"))
+    else if (line.Contains('x') && line.Contains(':'))
     {
         // Region line like "4x4: 0 0 0 0 2 0"
         var parts = line.Split(':');
@@ -26,7 +26,7 @@ foreach (var line in ReadAllLines())
         var counts = parts[1].Trim().Split(' ').Select(int.Parse).ToArray();
         regions.Add((int.Parse(dims[0]), int.Parse(dims[1]), counts));
     }
-    else if (line.EndsWith(":"))
+    else if (line.EndsWith(':'))
     {
         // Shape index line like "0:" - reset for new shape
         row = 0;
@@ -80,57 +80,47 @@ foreach (var region in regions)
         canFit++;
 }
 
-Console.WriteLine($"Shapes: {shapes.Count}, Regions: {regions.Count}");
-foreach (var s in shapes)
-    Console.WriteLine($"  Shape: {s.Count} cells - {string.Join(" ", s)}");
-foreach (var r in regions)
-    Console.WriteLine($"  Region: {r.W}x{r.H} counts: {string.Join(" ", r.Counts)}");
 Console.WriteLine($"Part 1: {canFit}");
 
 // Helper functions
 HashSet<(int r, int c)> Normalize(HashSet<(int r, int c)> s)
 {
     int minR = s.Min(p => p.r), minC = s.Min(p => p.c);
-    return s.Select(p => (p.r - minR, p.c - minC)).ToHashSet();
+    return [.. s.Select(p => (p.r - minR, p.c - minC))];
 }
 
 HashSet<(int r, int c)> Rotate90(HashSet<(int r, int c)> s) =>
-    s.Select(p => (p.c, -p.r)).ToHashSet();
+    [.. s.Select(p => (p.c, -p.r))];
 
 HashSet<(int r, int c)> FlipH(HashSet<(int r, int c)> s) =>
-    s.Select(p => (p.r, -p.c)).ToHashSet();
+    [.. s.Select(p => (p.r, -p.c))];
 
-bool TryPack(bool[,] grid, List<int> toPlace, int idx)
+bool TryPack(bool[,] grid, List<int> toPlace, int idx, bool debug = false)
 {
     if (idx >= toPlace.Count) return true;
 
     int h = grid.GetLength(0), w = grid.GetLength(1);
 
-    // Find first empty cell
-    int tr = -1, tc = -1;
-    for (int r = 0; r < h && tr < 0; r++)
-        for (int c = 0; c < w; c++)
-            if (!grid[r, c]) { tr = r; tc = c; break; }
-
-    if (tr < 0) return false;
-
+    // Try all possible positions for each variant
     foreach (var variant in allVariants[toPlace[idx]])
     {
-        foreach (var cell in variant)
+        // Try all base positions
+        for (int br = 0; br < h; br++)
         {
-            int br = tr - cell.r, bc = tc - cell.c;
-
-            bool valid = variant.All(p =>
+            for (int bc = 0; bc < w; bc++)
             {
-                int r = br + p.r, c = bc + p.c;
-                return r >= 0 && r < h && c >= 0 && c < w && !grid[r, c];
-            });
+                bool valid = variant.All(p =>
+                {
+                    int r = br + p.r, c = bc + p.c;
+                    return r >= 0 && r < h && c >= 0 && c < w && !grid[r, c];
+                });
 
-            if (valid)
-            {
-                foreach (var p in variant) grid[br + p.r, bc + p.c] = true;
-                if (TryPack(grid, toPlace, idx + 1)) return true;
-                foreach (var p in variant) grid[br + p.r, bc + p.c] = false;
+                if (valid)
+                {
+                    foreach (var p in variant) grid[br + p.r, bc + p.c] = true;
+                    if (TryPack(grid, toPlace, idx + 1, debug)) return true;
+                    foreach (var p in variant) grid[br + p.r, bc + p.c] = false;
+                }
             }
         }
     }

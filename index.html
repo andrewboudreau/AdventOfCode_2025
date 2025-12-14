@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advent of Code 2025 - Visualizations</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #f39c12;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+        }
+        .subtitle a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .subtitle a:hover {
+            text-decoration: underline;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            color: #3498db;
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+        }
+        .card p {
+            color: #aaa;
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+        }
+        .card a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .card a:hover {
+            background: #2980b9;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advent of Code 2025</h1>
+        <p class="subtitle">
+            Interactive Visualizations |
+            <a href="https://github.com/andrewarrow/AdventOfCode_2025">View Source on GitHub</a>
+        </p>
+
+        <div class="cards">
+            <div class="card">
+                <span class="tag">Day 12</span>
+                <h2>Christmas Tree Farm</h2>
+                <p>Interactive polyomino packing visualizer. Select regions from the list to see how presents fit under the trees.</p>
+                <a href="Day12/visualize.html">Launch Visualizer</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">Day 11</span>
+                <h2>Reactor Graph</h2>
+                <p>3D force-directed graph with animated particles traveling paths from start to end through required waypoints.</p>
+                <a href="Day11/visualize.html">Launch Visualizer</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">Day 7</span>
+                <h2>Tachyon Beam Splitter</h2>
+                <p>Watch beams propagate through a grid of splitters, branching left and right at each intersection.</p>
+                <a href="Day07/Day07.gif">View Animation</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">Day 8</span>
+                <h2>Playground Circuits</h2>
+                <p>Kruskal's algorithm connects 1000 junction boxes, forming circuits colored by cluster size.</p>
+                <a href="Day08/Day8-lowres.webp">View Image</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                Solutions in C# |
+                <a href="https://adventofcode.com/2025">Advent of Code 2025</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
