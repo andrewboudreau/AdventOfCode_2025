@@ -34,6 +34,11 @@ dotnet run --project Day01 -- Day01/problem.txt
 
 ## Visualizations
 
+### Day 8 - Playground (Christmas Light Circuits)
+Kruskal's algorithm connects 1000 junction boxes by shortest distance, forming circuits colored by size (red=largest, green=2nd, blue=3rd):
+
+![Day 8 Visualization](Day08/Day8-lowres.webp)
+
 ### Day 7 - Laboratories (Tachyon Beam Splitter)
 Beams propagate downward and split at each `^` splitter, branching left and right:
 

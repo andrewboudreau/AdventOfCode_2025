@@ -34,10 +34,6 @@ for (int i = 0; i < boxes.Length; i++)
 // Greedy approach: always try to connect nearest unconnected components first
 pairs.Sort((a, b) => a.dist.CompareTo(b.dist));
 
-// Debug: show first 3 pairs
-Console.WriteLine($"First 3 pairs: {string.Join(", ", pairs.Take(3).Select(p => $"({p.i},{p.j})={Math.Sqrt(p.dist):F2}"))}");
-Console.WriteLine($"Total boxes: {boxes.Length}, Total pairs: {pairs.Count}");
-
 // PHASE 3: Union-Find (Disjoint Set Union) data structure
 // Maintains a forest of trees where each tree represents a connected component.
 // Two key optimizations make this nearly O(1) per operation:
@@ -65,11 +61,12 @@ int Find(int x)
 
 // Merge two sets (union by rank)
 // Union by rank: Attach smaller tree under root of larger tree to minimize depth
-void Union(int x, int y)
+// Returns true if a merge occurred, false if already in same set
+bool Union(int x, int y)
 {
     var px = Find(x);
     var py = Find(y);
-    if (px == py) return;  // Already in same component - skip to avoid cycle
+    if (px == py) return false;  // Already in same component - no merge
 
     // Attach smaller rank tree under larger rank tree
     if (rank[px] < rank[py])
@@ -81,28 +78,47 @@ void Union(int x, int y)
         parent[py] = px;
         rank[px]++;  // Only increment rank when trees of equal rank merge
     }
+    return true;  // Merge occurred
 }
 
 // PHASE 4: Kruskal's algorithm - greedily add shortest edges that don't form cycles
 // Union-Find efficiently detects cycles: if Find(i) == Find(j), they're already connected
-// Result: Minimum Spanning Forest (MSF) with up to 1000 edges
+// Track: circuit count and the final merge that connects everything (for Part 2)
+var circuitCount = boxes.Length;  // Start with N separate circuits
+(int i, int j, double dist) lastMergePair = default;
+
 var connectionsToMake = Math.Min(1000, pairs.Count);
 for (int i = 0; i < connectionsToMake; i++)
 {
-    Union(pairs[i].i, pairs[i].j);  // Union is idempotent - redundant edges are no-ops
+    if (Union(pairs[i].i, pairs[i].j))
+    {
+        circuitCount--;
+        lastMergePair = pairs[i];
+    }
 }
 
-// PHASE 5: Analyze resulting connected components
-// After 1000 unions, boxes are partitioned into disjoint circuits.
-// Find() normalizes each box to its circuit's root representative.
+// PHASE 5: Analyze resulting connected components for Part 1
+// After 1000 connections, boxes are partitioned into disjoint circuits.
 var circuitSizes = boxes.Select((_, i) => Find(i))  // Map each box to its circuit root
     .GroupBy(root => root)                           // Group by circuit
     .Select(g => g.Count())                          // Count boxes per circuit
     .OrderByDescending(x => x)                       // Largest circuits first
     .ToList();
 
-// ANSWER: Product of three largest circuit sizes
-// Edge case handling: If fewer than 3 circuits exist, Take() returns what's available
+// ANSWER Part 1: Product of three largest circuit sizes
 var result = circuitSizes.Take(3).Aggregate(1L, (acc, x) => acc * x);
-
 result.ToConsole(x => $"Part 1: {x}");
+
+// PHASE 6: Part 2 - Continue until all boxes form a single circuit (if not already)
+for (int i = connectionsToMake; i < pairs.Count && circuitCount > 1; i++)
+{
+    if (Union(pairs[i].i, pairs[i].j))
+    {
+        circuitCount--;
+        lastMergePair = pairs[i];
+    }
+}
+
+// ANSWER Part 2: Product of X coordinates of the final connecting pair
+var part2 = (long)boxes[lastMergePair.i].X * boxes[lastMergePair.j].X;
+part2.ToConsole(x => $"Part 2: {x}");
